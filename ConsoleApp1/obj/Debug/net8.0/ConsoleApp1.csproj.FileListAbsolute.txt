@@ -49,3 +49,4 @@
 /Users/zhangxuefeng/src/dotnetproj/ConsoleApp1/obj/Debug/net8.0/ConsoleApp1.csproj.AssemblyReference.cache
 /Users/zhangxuefeng/src/dotnetproj/ConsoleApp1/obj/Debug/net8.0/ConsoleA.CB28C8CC.Up2Date
 /Users/zhangxuefeng/src/dotnetproj/ConsoleApp1/bin/Debug/net8.0/log4net.dll
+/Users/zhangxuefeng/src/dotnetproj/ConsoleApp1/obj/Debug/net8.0/ConsoleApp1.sourcelink.json

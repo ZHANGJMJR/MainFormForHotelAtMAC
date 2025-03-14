@@ -477,8 +477,8 @@ VALUES
        GUEST_CHECK_HIST.numGuests,
        GUEST_CHECK_HIST.checkRef,
        LOCATION_HIERARCHY_ITEM.name AS locName,
-       REVENUE_CENTER.nameMaster AS rvcName,
-       ORDER_TYPE.nameMaster AS otName,
+       RCS.name AS rvcName,
+       OTMS.name AS otName,
        EMPLOYEE.firstName,
        EMPLOYEE.lastName
 FROM     EMPLOYEE RIGHT OUTER JOIN
@@ -489,6 +489,8 @@ ON GUEST_CHECK_HIST.locationID = LOCATION_HIERARCHY_ITEM.locationID
 ON GUEST_CHECK_HIST.revenueCenterID = REVENUE_CENTER.revenueCenterID
 ON GUEST_CHECK_HIST.orderTypeID = ORDER_TYPE.orderTypeID
 ON GUEST_CHECK_HIST.employeeID = EMPLOYEE.employeeID
+LEFT JOIN   Revenue_Center_String RCS on RCS.Revenuecenterid = REVENUE_CENTER.Revenuecenterid 	and rcs.poslanguageid=3 
+LEFT JOIN   ORDER_TYPE_STRING OTMS on OTMS.ordertypeid = ORDER_TYPE.ordertypeid 	and OTMS.poslanguageid=3 
 WHERE (GUEST_CHECK_HIST.organizationID = 10260) AND
     (GUEST_CHECK_HIST.locationID =2041) AND
     (GUEST_CHECK_HIST.guestCheckID = :guestCheckID )";
