@@ -93,7 +93,7 @@ public class Dlt
         }
 
         string[] tables = { "guestcheckdetailssumrow", "guestcheckdetails", "guestcheck" };
-        log.Info($"=== 开始清理 {date:yyyy-MM-dd} 的数据 ===");
+        log.Info($"=== Start cleaning the data for {date:yyyy-MM-dd}.  ===");
 
         using (IDbConnection dbConnection = new MySqlConnection(connectionString))
         {
@@ -106,20 +106,20 @@ public class Dlt
                     {
                         string query = $"DELETE FROM {table} WHERE DATE(openDatetime) = @date";
                         int affectedRows = dbConnection.Execute(query, new { date = date.Date }, transaction);
-                        log.Info($"表 `{table}` 清理完成，影响行数：{affectedRows}");
+                        log.Info($"table {table} cleaned，affected rows：{affectedRows}");
                     }
                     transaction.Commit();
-                    log.Info("=== 清理数据成功 ===");
+                    log.Info("=== The data cleaning was successful.! ===");
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    log.Error("=== 清理数据失败 ===", ex);
+                    log.Error("=== The data cleaning failed. ===", ex);
                     throw;
                 }
             }
         }
-        log.Info("=== 结束清理数据 ===");
+        log.Info("=== The data cleaning is complete. ===");
     }
 
 
