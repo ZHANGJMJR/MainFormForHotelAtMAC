@@ -1,0 +1,27 @@
+[2025-03-12 22:42:22,178] [INFO] - === 开始同步数据 ===
+[2025-03-12 22:42:37,369] [ERROR] - Oracle 数据库查询失败: ORA-50000: Connection request timed out
+Oracle.ManagedDataAccess.Client.OracleException (0x80004005): ORA-50000: Connection request timed out
+   at OracleInternal.ConnectionPool.PoolManager`3.Get(ConnectionString csWithDiffOrNewPassw, Boolean bGetForApp, OracleConnection connRefForCriteria, String affinityInstanceName, Boolean bForceMatch, Boolean bAsync)
+   at OracleInternal.ConnectionPool.OraclePoolManager.Get(ConnectionString csWithNewPassw, Boolean bGetForApp, OracleConnection connRefForCriteria, String affinityInstanceName, Boolean bForceMatch, Boolean bAsync)
+   at OracleInternal.ConnectionPool.OracleConnectionDispenser`3.Get(ConnectionString cs, PM conPM, ConnectionString pmCS, OracleOpaqueString opaquePassw, OracleOpaqueString securedProxyPassw, OracleConnection connRefForCriteria, Boolean bAsync)
+   at Oracle.ManagedDataAccess.Client.OracleConnectionInternal.OpenInternal(Boolean bAsync)
+   at Oracle.ManagedDataAccess.Client.OracleConnectionInternal.Open()
+   at Oracle.ManagedDataAccess.Client.OracleConnection.Open()
+   at Dlt.SyncData() in /Users/zhangxuefeng/src/dotnetproj/ConsoleApp1/dlt.cs:line 50
+[2025-03-12 22:42:37,372] [INFO] - === 数据同步完成 ===
+[2025-03-12 22:43:58,183] [INFO] - === 开始同步数据 ===
+[2025-03-12 22:43:58,743] [INFO] - Oracle 数据库连接成功
+[2025-03-12 22:43:58,865] [INFO] - MySQL 数据库连接成功
+[2025-03-12 22:43:59,086] [INFO] - 从 Oracle 获取 58 条记录
+[2025-03-12 22:43:59,173] [INFO] - 成功插入 58 条数据到 MySQL
+[2025-03-12 22:43:59,177] [INFO] - Oracle 数据库连接关闭
+[2025-03-12 22:43:59,179] [INFO] - MySQL 数据库连接关闭
+[2025-03-12 22:43:59,179] [INFO] - === 数据同步完成 ===
+[2025-03-12 23:06:06,831] [INFO] - === 开始同步数据 ===
+[2025-03-12 23:06:07,423] [INFO] - Oracle 数据库连接成功
+[2025-03-12 23:06:07,555] [INFO] - MySQL 数据库连接成功
+[2025-03-12 23:06:07,768] [INFO] - 从 Oracle 获取 58 条记录
+[2025-03-12 23:06:07,868] [INFO] - 成功插入 58 条数据到 MySQL
+[2025-03-12 23:06:07,872] [INFO] - Oracle 数据库连接关闭
+[2025-03-12 23:06:07,874] [INFO] - MySQL 数据库连接关闭
+[2025-03-12 23:06:07,874] [INFO] - === 数据同步完成 ===
