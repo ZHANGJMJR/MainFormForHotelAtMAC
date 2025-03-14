@@ -74,7 +74,7 @@ public class GuestCheckDetailsSumRow
 }
 public class Dlt
 {
-    private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+    private static readonly ILog log = LogManager.GetLogger("DltLogger");
     private static readonly string oracleConnStr = "User Id=sys;Password=Orcl$1mph0ny;Data Source=172.16.139.12:1521/mcrspos;DBA Privilege=SYSDBA;";
     protected static readonly string mysqlConnStr = "Server=127.0.0.1;Port=3306;Database=hotel;User=root;Password=root;";
     public string getMysqlConnectStr => mysqlConnStr;
@@ -127,8 +127,8 @@ public class Dlt
     public void SyncData()
     {
         string currentDateStr = "2024-07-01";
-        DeleteDataByDate(currentDateStr,getMysqlConnectStr);
-        
+        DeleteDataByDate(currentDateStr, getMysqlConnectStr);
+
         log.Info("=== 开始同步数据 ===");
 
         using (var oracleConn = new OracleConnection(oracleConnStr))
@@ -142,7 +142,7 @@ public class Dlt
                 mysqlConn.Open();
                 log.Info("MySQL 数据库连接成功");
 
-                
+
                 string masterQuery = @"SELECT gch.guestCheckID, gch.openBusinessDate as busDate, gch.locationID, gch.revenuecenterid,
                        gch.checknum AS checkNum, gch.opendatetime AS openDateTime, gch.checktotal AS checkTotal,
                        gch.numitems AS numItems, e.firstname AS firstName, e.lastname AS lastName 
