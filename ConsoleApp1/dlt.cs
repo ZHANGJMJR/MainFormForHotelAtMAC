@@ -106,7 +106,7 @@ public class Dlt
                     {
                         string query = $"DELETE FROM {table} WHERE DATE(openDatetime) = @date";
                         int affectedRows = dbConnection.Execute(query, new { date = date.Date }, transaction);
-                        log.Info($"table {table} cleaned，affected rows：{affectedRows}");
+                        log.Info($" {table} cleaned，affected rows：{affectedRows}");
                     }
                     transaction.Commit();
                     log.Info("=== The data cleaning was successful.! ===");
@@ -124,12 +124,12 @@ public class Dlt
 
 
 
-    public void SyncData()
+    public void SyncData(String argCurrentDateStr="2025-03-14")
     {
-        string currentDateStr = "2024-07-01";
+        string currentDateStr = argCurrentDateStr;
         DeleteDataByDate(currentDateStr, getMysqlConnectStr);
 
-        log.Info("=== 开始同步数据 ===");
+        log.Info($"=== 开始同步数据 {currentDateStr}===");
 
         using (var oracleConn = new OracleConnection(oracleConnStr))
         using (var mysqlConn = new MySqlConnection(mysqlConnStr))
@@ -272,8 +272,8 @@ SELECT GUEST_CHECK_LINE_ITEM_HIST.transDatetime AS transTime,
        GUEST_CHECK_LINE_ITEM_HIST.guestCheckLineItemID,
        GUEST_CHECK_LINE_ITEM_HIST.detailType,
        DISCOUNT.nameMaster AS itemName,
-       chr('') AS itemchname,
-       REVENUE_CENTER.nameMaster AS rvcName,
+       TO_NCHAR(DISS.name)  AS itemchname,
+       RCS.name AS rvcName,
        EMPLOYEE.firstName,
        EMPLOYEE.lastName,
        CASE
@@ -291,11 +291,13 @@ FROM     DISCOUNT  RIGHT OUTER JOIN
 ON REVENUE_CENTER.revenueCenterID = GUEST_CHECK_LINE_ITEM_HIST.revenueCenterID
 ON EMPLOYEE.employeeID = NVL(GUEST_CHECK_LINE_ITEM_HIST.managerEmployeeID,GUEST_CHECK_LINE_ITEM_HIST.transEmployeeID)
 ON DISCOUNT.discountID = GUEST_CHECK_LINE_ITEM_HIST.recordID
+left join Revenue_Center_String RCS on REVENUE_CENTER.Revenuecenterid=RCS.Revenuecenterid  and rcs.poslanguageid=3
+left join DISCOUNT_String DISS on DISS.discountid= DISCOUNT.discountid and DISS.poslanguageid=3
 WHERE (GUEST_CHECK_LINE_ITEM_HIST.organizationID =10260) AND
     (GUEST_CHECK_LINE_ITEM_HIST.locationID =2041) AND
     (GUEST_CHECK_LINE_ITEM_HIST.detailType = 2) AND
     (GUEST_CHECK_LINE_ITEM_HIST.doNotShow IS NULL OR GUEST_CHECK_LINE_ITEM_HIST.doNotShow = 0) AND
-    (GUEST_CHECK_LINE_ITEM_HIST.guestCheckID =:guestCheckID)
+    (GUEST_CHECK_LINE_ITEM_HIST.guestCheckID = :guestCheckID)
 UNION
 SELECT GUEST_CHECK_HIST.openDateTime  AS transDatetime,
        100 AS serviceRoundNum,
@@ -502,6 +504,7 @@ VALUES
    @locName, @rvcName,@otName,@firstName,@lastName,@guestCheckID);";
                 foreach (var masterRecord in masterRecords)
                 {
+                     
                     long guestCheckID = masterRecord.guestcheckid;
                     var detailRecords = oracleConn.Query<GuestCheckDetails>(detailQuery, new { guestCheckID }).ToList();
                     var detailSumRowRecords = oracleConn.Query<GuestCheckDetailsSumRow>(detailQuerySumRow, new { guestCheckID }).ToList();
@@ -514,6 +517,23 @@ VALUES
                     else
                     {
                         log.Info($"G_C_ID = {guestCheckID}-{masterRecord.checkNum}从表数据共 {detailRecords.Count} 条");
+                        if (detailRecords.Count>1){
+                            log.Info($"检测处理从表数据-donotshow");
+                            for (int i = 1 ;i<detailRecords.Count;i++)
+                            {
+                               GuestCheckDetails cur_dr=detailRecords[i];
+                               GuestCheckDetails pre_dr=detailRecords[i-1];
+                               if((cur_dr.detailType==5 && cur_dr.salesCountDivisor ==null && 
+                               pre_dr.detailType==1)||
+                               (cur_dr.detailType==6 && pre_dr.detailType==4)||
+                               (cur_dr.detailType==5 && pre_dr.detailType==2)){
+                                    cur_dr.doNotShow=1;
+                                    pre_dr.itemName2=cur_dr.itemName;
+                               }                               
+                            }
+                            log.Info($"delete从表数据-donotshow");
+                            detailRecords.RemoveAll(record => record.doNotShow == 1);
+                        }
                         using (var transaction = new TransactionScope())
                         {
                             mysqlConn.Execute(detailInsertQuery, detailRecords);
@@ -533,7 +553,8 @@ VALUES
                             transaction.Complete();
                         }
                     }
-                }
+                
+}
                 log.Info("从表数据同步完成");
             }
             catch (Exception ex)
