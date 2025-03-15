@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "XJsoVUZIliE=",
+  "dgSpecHash": "dDeaA71i3v8=",
   "success": true,
   "projectFilePath": "/Users/zhangxuefeng/src/dotnetproj/ConsoleApp1/ConsoleApp1.csproj",
   "expectedPackageFiles": [
@@ -22,6 +22,7 @@
     "/Users/zhangxuefeng/.nuget/packages/microsoft.extensions.fileproviders.abstractions/8.0.0/microsoft.extensions.fileproviders.abstractions.8.0.0.nupkg.sha512",
     "/Users/zhangxuefeng/.nuget/packages/microsoft.extensions.fileproviders.physical/8.0.0/microsoft.extensions.fileproviders.physical.8.0.0.nupkg.sha512",
     "/Users/zhangxuefeng/.nuget/packages/microsoft.extensions.filesystemglobbing/8.0.0/microsoft.extensions.filesystemglobbing.8.0.0.nupkg.sha512",
+    "/Users/zhangxuefeng/.nuget/packages/microsoft.extensions.logging.abstractions/2.1.1/microsoft.extensions.logging.abstractions.2.1.1.nupkg.sha512",
     "/Users/zhangxuefeng/.nuget/packages/microsoft.extensions.primitives/8.0.0/microsoft.extensions.primitives.8.0.0.nupkg.sha512",
     "/Users/zhangxuefeng/.nuget/packages/microsoft.io.recyclablememorystream/3.0.1/microsoft.io.recyclablememorystream.3.0.1.nupkg.sha512",
     "/Users/zhangxuefeng/.nuget/packages/microsoft.netcore.platforms/1.1.0/microsoft.netcore.platforms.1.1.0.nupkg.sha512",
@@ -29,6 +30,7 @@
     "/Users/zhangxuefeng/.nuget/packages/microsoft.win32.systemevents/8.0.0/microsoft.win32.systemevents.8.0.0.nupkg.sha512",
     "/Users/zhangxuefeng/.nuget/packages/mysql.data/9.2.0/mysql.data.9.2.0.nupkg.sha512",
     "/Users/zhangxuefeng/.nuget/packages/oracle.manageddataaccess.core/23.7.0/oracle.manageddataaccess.core.23.7.0.nupkg.sha512",
+    "/Users/zhangxuefeng/.nuget/packages/quartz/3.14.0/quartz.3.14.0.nupkg.sha512",
     "/Users/zhangxuefeng/.nuget/packages/system.buffers/4.5.1/system.buffers.4.5.1.nupkg.sha512",
     "/Users/zhangxuefeng/.nuget/packages/system.componentmodel.annotations/5.0.0/system.componentmodel.annotations.5.0.0.nupkg.sha512",
     "/Users/zhangxuefeng/.nuget/packages/system.configuration.configurationmanager/8.0.0/system.configuration.configurationmanager.8.0.0.nupkg.sha512",
