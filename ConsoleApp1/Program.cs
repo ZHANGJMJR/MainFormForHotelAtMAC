@@ -5,13 +5,20 @@ Dlt dlt = new Dlt();
 DateTime startDate = new DateTime(2024, 12, 1);
 DateTime endDate = new DateTime(2024, 12, 11);
 
+/// 实现多日导入数据
 foreach (var date in GetDateRange(startDate, endDate))
 {
-    Console.WriteLine(date.ToString("yyyy-MM-dd"));
-    dlt.SyncData(date.ToString("yyyy-MM-dd"));
+    // Console.WriteLine(date.ToString("yyyy-MM-dd"));
+    // dlt.SyncData(date.ToString("yyyy-MM-dd"));
 }
-    
+// 富掌柜数据导入
+Dlt.ImportCsvToMySQL("/Users/zhangxuefeng/src/c1.csv",Dlt.getMysqlConnectStr());
 
+        // 调用方法转换编码，并删除最后一行
+//CsvConverter.ConvertCsvEncoding(inputFilePath, outputFilePath, true);
+
+
+//Dlt.ImportExcelToMySQL("/Users/zhangxuefeng/src/aaa.xls",Dlt.getMysqlConnectStr());
 static IEnumerable<DateTime> GetDateRange(DateTime start, DateTime end)
 {
     return Enumerable.Range(0, (end - start).Days + 1)
