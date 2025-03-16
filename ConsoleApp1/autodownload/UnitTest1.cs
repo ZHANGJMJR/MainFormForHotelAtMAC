@@ -21,9 +21,14 @@ public class Tests
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions 
             { Headless = false,
-                Args = new[] { "--lang=zh-CN" }  } );
+                Args = new List<string> { "--start-maximized" } } );
         
-        var page = await browser.NewPageAsync();
+        var context = await browser.NewContextAsync(new BrowserNewContextOptions
+        {
+            ViewportSize = ViewportSize.NoViewport
+        });
+
+        var page = await context.NewPageAsync();
         
         await page.GotoAsync(url);
         await page.ScreenshotAsync(new PageScreenshotOptions{Path = "EAAP.jpg"});
@@ -44,5 +49,6 @@ public class Tests
         await page.GotoAsync(filedownloadurl);
         Task.Delay(5000).Wait();
         await page.ScreenshotAsync(new PageScreenshotOptions{Path = "EAAP3.jpg"});
+        
     }
 }

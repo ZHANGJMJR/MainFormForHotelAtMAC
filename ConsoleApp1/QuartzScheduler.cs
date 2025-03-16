@@ -31,6 +31,8 @@ public class SyncJob : IJob
             // Console.WriteLine(date.ToString("yyyy-MM-dd"));
             //dlt.SyncData(date.ToString("yyyy-MM-dd"));
         }
+// 需要添加，自动下载数据
+
         dlt.ImportCsvToMySQL(csvFilePath, mysqlConnectionString); // 执行 CSV 导入
 
         LogHelper.Info($"✅ scheduler任务执行完成：{DateTime.Now}");
