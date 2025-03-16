@@ -68,3 +68,5 @@
 /Users/zhangxuefeng/src/dotnetproj/ConsoleApp1/bin/Debug/net8.0/CsvHelper.dll
 /Users/zhangxuefeng/src/dotnetproj/ConsoleApp1/bin/Debug/net8.0/System.Text.Encoding.CodePages.dll
 /Users/zhangxuefeng/src/dotnetproj/ConsoleApp1/bin/Debug/net8.0/runtimes/win/lib/net8.0/System.Text.Encoding.CodePages.dll
+/Users/zhangxuefeng/src/dotnetproj/ConsoleApp1/bin/Debug/net8.0/Microsoft.Extensions.Logging.Abstractions.dll
+/Users/zhangxuefeng/src/dotnetproj/ConsoleApp1/bin/Debug/net8.0/Quartz.dll

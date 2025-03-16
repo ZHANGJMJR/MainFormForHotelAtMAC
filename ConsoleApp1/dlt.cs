@@ -5,9 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Globalization;
 using System.Transactions;
-using Dapper;
-using log4net;
-using log4net.Config;
+using Dapper; 
 using Oracle.ManagedDataAccess.Client;
 using MySql.Data.MySqlClient;
 using System.Reflection;
@@ -79,13 +77,13 @@ public class GuestCheckDetailsSumRow
 }
 public class Dlt
 {
-    private static readonly ILog log = LogManager.GetLogger("DltLogger");
+    //private static readonly ILogHelper LogHelper = LogHelperManager.GetLogHelperger("DltLogHelperger");
     private static readonly string oracleConnStr = "User Id=sys;Password=Orcl$1mph0ny;Data Source=172.16.139.12:1521/mcrspos;DBA Privilege=SYSDBA;";
     protected static readonly string mysqlConnStr = "Server=127.0.0.1;Port=3306;Database=hotel;User=root;Password=root;";
     public static string getMysqlConnectStr() => mysqlConnStr;
     static Dlt()
     {
-        XmlConfigurator.Configure(new FileInfo("log.config"));
+       // XmlConfigurator.Configure(new FileInfo("LogHelper.config"));
     }
 
     public void DeleteDataByDate(string dateString, string connectionString)
@@ -93,12 +91,12 @@ public class Dlt
         DateTime date;
         if (!DateTime.TryParse(dateString, out date))
         {
-            log.Info("=== Invalid date format clean datum ===");
+            LogHelper.Info("=== Invalid date format clean datum ===");
             throw new ArgumentException("Invalid date format");
         }
 
         string[] tables = { "guestcheckdetailssumrow", "guestcheckdetails", "guestcheck" };
-        log.Info($"=== Start cleaning the data for {date:yyyy-MM-dd}.  ===");
+        LogHelper.Info($"=== Start cleaning the data for {date:yyyy-MM-dd}.  ===");
 
         using (IDbConnection dbConnection = new MySqlConnection(connectionString))
         {
@@ -111,20 +109,20 @@ public class Dlt
                     {
                         string query = $"DELETE FROM {table} WHERE DATE(openDatetime) = @date";
                         int affectedRows = dbConnection.Execute(query, new { date = date.Date }, transaction);
-                        log.Info($" {table} cleaned，affected rows：{affectedRows}");
+                        LogHelper.Info($" {table} cleaned，affected rows：{affectedRows}");
                     }
                     transaction.Commit();
-                    log.Info("=== The data cleaning was successful.! ===");
+                    LogHelper.Info("=== The data cleaning was successful.! ===");
                 }
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    log.Error("=== The data cleaning failed. ===", ex);
+                    LogHelper.Error("=== The data cleaning failed. ===", ex);
                     throw;
                 }
             }
         }
-        log.Info("=== The data cleaning is complete. ===");
+        LogHelper.Info("=== The data cleaning is complete. ===");
     }
 
     public void SyncData(String argCurrentDateStr = "2025-03-14")
@@ -136,7 +134,7 @@ public class Dlt
         string detailQuerySumRowE = "sWcpFGVmAB9U9bvmsUOplTSSqHKmm2eHph8nr3P8/WOoePUvMorYm9DBZ9sQdEyrr4K+/0fg3miB2BGv8QTnl6qHJON5JS0g584aS8AtMI/llwAlpa/lcPabNOwbPLMq5/IwTxUrOWF8RbEQ37t/Ns9x4Umsz+VI3GXa5dJSPufUpkZohgvI6tMJrLW/+8fPZPJdvzlymcQdkqPs01X3rdLqiaZhXpvM8N6gGelvCdfVE9+SXdwSn2QZs1WQ/JCCYc4U/L1PlAaAy4CWQbbfOH2YMAnU/rYZ+ZD0cFpIUQjPgZA6uct5jcs/n+5rZd9Kskk57VyrlDYspCjIp5mbl8W3yf+NR1BnJcgD3iJyoBKE7UWzP16h4ajJpc4B4uzk0PWWl+XgGNKoKRibnvvx2L2eQU39NI+MvoevjBghm+PbB1+6hHpT9/nh72ThqRxvG5hGwOZ6n2qP/t6jZw0IFq2CdyVrJVMC4U5vVBjl4SBTCc9dm04eCaJUGQXETcg+jjXrjZbm30QYy/pzcqXPUQdgJkosBwHCgkg7mY0tAe5/YJzF9d2O3CWunBjGGuMFndMYIts9CyqnRfg36CNsDCjnBGgUW46rMPH4MZ7sSuwNv9wfOYHwoTEsbMiBi4LfdDVCGVL1XIAfF9wwhNdJc6KavyJgep0p2lV1m44rlYoJ1nz9Q8V4lId9p/ea8DveHXZO8+KWss0RSGuMIZ2uBzUdwK7NKWjgoXkFyZrTNO2UKoBtFaZS13jYg4RWKopCKeIET9fBDxn8/zt9HqdM1/Ejm7gaP3p2xzLiY11I3XSQo1XwG5KXtXuRvE0MzY4Oe09JgbioukZZyosE2EYZwmYWXvv2CltoI9AoDjjPJ+oG7Wmpn0CFm2fSYIdgRKt4QXnw9EkdphojmqGYnfUwLxgQJrIuVFmY4luW/QJjm1Nny/zk1C49IEGzC7hvuv0gJz5w+72yniiHyRc47V4hdv4RmfhyKyM2pq6moc/vzbER/0HuFJ4687yVxvK7+QgzSaMxIh5uTAyEibwzbpmIrLQmVEFg8yRI6nTbVG+Q+HAwrD4ZLl7X+iigxAh/L06MnGb6n3vMqZMDi6Vwc0xuEwtlscDW4GKdFJXQ51N4z0J0MaK70dFjhHrjlfaTcXD9kNpezcEj9pOXtCyD3wS/ddDufkQ+5aKpvuClXK/5lqekn6zeNkxVdLrjYH1UtLZOebX15XArU4A0UvKA4NGt2KN/X94nWzYqQyDDIcj1PFz87G/YEOTYRxd1VfTeCeohkyipCgC2Rp97S8ZdGb70SkKjvzO5arXYdBKeMK+9NRJuMnTmnq9Vnqm8aqCKms9tLJcyEhZCQrWxWhgMlf0gBldWMtf+Y3qW2FiqBxUySQL8D9C6ircKyNdhjh/noY5j65bofP/XvZS8s1rgcKybngd8xwpmKfj53Eyhf0r2nmNTKFbEalVZz8XPuoAlBqvQ7KCGQw02kvSwcLaGorxKDFUPLaXSfZ67P0lLvY/wduw4ESGZXXFrADUCnczTwCqP7sk+v4i37y39x/F7EXDIjJvdKE/VfZ+gkNab3iRSwWFvgDoMRcZyJfy0XO9gljhKCTPlGc6Uw6kfQ+SBDjwhBG5CoitbH3agA6842E/+o+YI5AqCOeX20QVGQktBeflyUoW0LApMWW2KlDbOFwoP1QprDoIxmxb5RuGXXnhQy23HgZ+0UU2MIAOBhc+junZjVlD3Wbrpzd7i8SMsQ3O96ICfpZzLZ7hVrxnazxslwRNpr4TzA27d+9Sdmwyog8a/";
 
 
-        log.Info($"=== 开始同步数据 {currentDateStr}===");
+        LogHelper.Info($"=== 开始同步数据 {currentDateStr}===");
 
         using (var oracleConn = new OracleConnection(oracleConnStr))
         using (var mysqlConn = new MySqlConnection(mysqlConnStr))
@@ -144,10 +142,10 @@ public class Dlt
             try
             {
                 oracleConn.Open();
-                log.Info("Oracle 数据库连接成功");
+                LogHelper.Info("Oracle 数据库连接成功");
 
                 mysqlConn.Open();
-                log.Info("MySQL 数据库连接成功");
+                LogHelper.Info("MySQL 数据库连接成功");
 
 
                 // string masterQuery = @"SELECT gch.guestCheckID, gch.openBusinessDate as busDate, gch.locationID, gch.revenuecenterid,
@@ -162,11 +160,11 @@ public class Dlt
                 var masterRecords = oracleConn.Query<GuestCheckHist>(masterQuery, new { currentDateStr }).ToList();
                 if (!masterRecords.Any())
                 {
-                    log.Warn("主表无数据，不执行从表查询");
+                    LogHelper.Warn("主表无数据，不执行从表查询");
                     return;
                 }
 
-                log.Info($"从 Oracle 获取 {masterRecords.Count} 条主表记录");
+                LogHelper.Info($"从 Oracle 获取 {masterRecords.Count} 条主表记录");
                 string masterInsertQuery = @"INSERT INTO guestcheck (guestCheckID, busDate, locationid, revenuecenterid, checkNum, openDateTime, checkTotal, numItems, firstName, lastName) 
                 VALUES (@guestCheckID, @busDate, @locationid, @revenuecenterid, @checkNum, @openDateTime, @checkTotal, @numItems, @firstName, @lastName);";
                 using (var transaction = new TransactionScope())
@@ -175,7 +173,7 @@ public class Dlt
                     transaction.Complete();
                 }
 
-                log.Info("主表数据同步完成");
+                LogHelper.Info("主表数据同步完成");
                 //                 string detailQuery = @"SELECT * FROM (SELECT GUEST_CHECK_LINE_ITEM_HIST.transDatetime AS transTime,
                 // GUEST_CHECK_LINE_ITEM_HIST.serviceRoundNum,
                 // (GUEST_CHECK_LINE_ITEM_HIST.lineNum*10) AS lineNum,
@@ -522,14 +520,14 @@ VALUES
                     detailSumRowRecords.ForEach(record => record.guestCheckID = masterRecord.guestcheckid);
                     if (!detailRecords.Any())
                     {
-                        log.Warn($"G_C_ID = {guestCheckID}-{masterRecord.checkNum} 没有对应的从表数据");
+                        LogHelper.Warn($"G_C_ID = {guestCheckID}-{masterRecord.checkNum} 没有对应的从表数据");
                     }
                     else
                     {
-                        log.Info($"G_C_ID = {guestCheckID}-{masterRecord.checkNum}从表数据共 {detailRecords.Count} 条");
+                        LogHelper.Info($"G_C_ID = {guestCheckID}-{masterRecord.checkNum}从表数据共 {detailRecords.Count} 条");
                         if (detailRecords.Count > 1)
                         {
-                            log.Info($"检测处理从表数据-donotshow");
+                            LogHelper.Info($"检测处理从表数据-donotshow");
                             for (int i = 1; i < detailRecords.Count; i++)
                             {
                                 GuestCheckDetails cur_dr = detailRecords[i];
@@ -543,7 +541,7 @@ VALUES
                                     pre_dr.itemName2 = cur_dr.itemName;
                                 }
                             }
-                            log.Info($"delete从表数据-donotshow");
+                            LogHelper.Info($"delete从表数据-donotshow");
                             detailRecords.RemoveAll(record => record.doNotShow == 1);
                         }
                         using (var transaction = new TransactionScope())
@@ -554,11 +552,11 @@ VALUES
                     }
                     if (!detailSumRowRecords.Any())
                     {
-                        log.Warn($"G_C_ID = {guestCheckID}-{masterRecord.checkNum} 没有对应的从表SUM数据");
+                        LogHelper.Warn($"G_C_ID = {guestCheckID}-{masterRecord.checkNum} 没有对应的从表SUM数据");
                     }
                     else
                     {
-                        log.Info($"G_C_ID = {guestCheckID}-{masterRecord.checkNum}从表SUM数据共 {detailSumRowRecords.Count} 条");
+                        LogHelper.Info($"G_C_ID = {guestCheckID}-{masterRecord.checkNum}从表SUM数据共 {detailSumRowRecords.Count} 条");
                         using (var transaction = new TransactionScope())
                         {
                             mysqlConn.Execute(detailInsertQuerySumRow, detailSumRowRecords);
@@ -567,19 +565,19 @@ VALUES
                     }
 
                 }
-                log.Info("从表数据同步完成");
+                LogHelper.Info("从表数据同步完成");
             }
             catch (Exception ex)
             {
-                log.Error("数据同步失败: " + ex.Message, ex);
+                LogHelper.Error("数据同步失败: " + ex.Message, ex);
             }
             finally
             {
-                if (oracleConn.State == ConnectionState.Open) { oracleConn.Close(); log.Info("Oracle 数据库连接关闭"); }
-                if (mysqlConn.State == ConnectionState.Open) { mysqlConn.Close(); log.Info("MySQL 数据库连接关闭"); }
+                if (oracleConn.State == ConnectionState.Open) { oracleConn.Close(); LogHelper.Info("Oracle 数据库连接关闭"); }
+                if (mysqlConn.State == ConnectionState.Open) { mysqlConn.Close(); LogHelper.Info("MySQL 数据库连接关闭"); }
             }
         }
-        log.Info("=== 数据同步完成 ===1");
+        LogHelper.Info("=== 数据同步完成 ===1");
     }
 
     public static void ImportExcelToMySQL(string excelFilePath, string connectionString)
@@ -714,12 +712,12 @@ VALUES
     }
 
 
-    public static void ImportCsvToMySQL(string csvFilePath, string connectionString)
+    public  void ImportCsvToMySQL(string csvFilePath, string connectionString)
     {
         uploadfile(csvFilePath,mysqlConnStr);
-        log.Info("csv changing encoding to utf8");
+        LogHelper.Info("csv changing encoding to utf8");
         CsvConverter.ConvertCsvEncoding(csvFilePath, csvFilePath, true);
-        log.Info("csv encoding changed to utf8 .");
+        LogHelper.Info("csv encoding changed to utf8 .");
         uploadfile(csvFilePath,mysqlConnStr);
         using (var connection = new MySqlConnection(connectionString))
         {
@@ -742,12 +740,12 @@ VALUES
                 //     Console.WriteLine(header);  // 打印 CSV 文件的表头，看看是否符合 C# 类的属性
                 // }
                 //csv.Configuration.RegisterClassMap<CsvRecordMap>();
-                log.Info("===csv retrieving data===");
+                LogHelper.Info("===csv retrieving data===");
                 records = csv.GetRecords<FuzhangguiRecord>().ToList();
-                log.Info($"===csv data {records.Count}===");
+                LogHelper.Info($"===csv data {records.Count}===");
                 foreach (var record in records)
                 {
-                    log.Info($"===csv details {record.Ordernum}===");
+                    LogHelper.Info($"===csv details {record.Ordernum}===");
                     string query = @"INSERT INTO fuzhanggui 
                                     (storename, storeid, itemname, paymethod, subitemname, property, barcode, itemgroup, finitemgroup, ordernum, 
                                     orderdate, ordertime, paydate, paytime, price, qty, unit, orgprice, disprice, actualmount, refund, discount, 
@@ -802,7 +800,7 @@ VALUES
             }
 
             connection.Close();
-            log.Info("csv data uploaded!");
+            LogHelper.Info("csv data uploaded!");
             Console.WriteLine("数据导入完成！");
         }
     }
@@ -819,11 +817,11 @@ public static void uploadfile(string argfilepath,string argMsqlconnectstr)
         {
             // 读取文件内容为字节数组
             fileData = File.ReadAllBytes(filePath);
-            log.Info("读取文件成功");
+            LogHelper.Info("读取文件成功");
         }
         catch (Exception ex)
         {
-            log.Error($"读取文件时出错: {ex.Message}");
+            LogHelper.Error($"读取文件时出错: {ex.Message}");
             return;
         }
 
@@ -840,12 +838,12 @@ public static void uploadfile(string argfilepath,string argMsqlconnectstr)
                     cmd.Parameters.AddWithValue("@filedata", fileData);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
-                    log.Info($"成功上传 {rowsAffected} 个文件。");
+                    LogHelper.Info($"成功上传 {rowsAffected} 个文件。");
                 }
             }
             catch (Exception ex)
             {
-                 log.Info($"数据库操作出错: {ex.Message}");
+                 LogHelper.Info($"数据库操作出错: {ex.Message}");
                 // Console.WriteLine($"数据库操作出错: {ex.Message}");
             }
         }

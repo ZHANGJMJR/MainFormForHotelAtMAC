@@ -1,23 +1,31 @@
 ﻿// See https://aka.ms/new-console-template for more information
 Console.WriteLine("Hello, World!");
-Dlt dlt = new Dlt();
+// Dlt dlt = new Dlt();
 
 DateTime startDate = new DateTime(2024, 12, 1);
 DateTime endDate = new DateTime(2024, 12, 11);
 
-static IEnumerable<DateTime> GetDateRange(DateTime start, DateTime end)
-{
-    return Enumerable.Range(0, (end - start).Days + 1)
-                     .Select(offset => start.AddDays(offset));
-}
-/// 实现多日导入数据
-foreach (var date in GetDateRange(startDate, endDate))
-{
-    // Console.WriteLine(date.ToString("yyyy-MM-dd"));
-    // dlt.SyncData(date.ToString("yyyy-MM-dd"));
-}
-// 富掌柜数据导入
-Dlt.ImportCsvToMySQL("/Users/zhangxuefeng/src/c1.csv",Dlt.getMysqlConnectStr());
+        Console.WriteLine("🚀 Quartz 定时任务系统启动...");
+        
+        // 启动 Quartz 任务调度，并传递参数
+        await QuartzScheduler.Start("/Users/zhangxuefeng/src/c1.csv", 
+         Dlt.getMysqlConnectStr(),startDate,endDate,"* */3 * * * ? *");
+
+        await Task.Delay(-1);
+
+// static IEnumerable<DateTime> GetDateRange(DateTime start, DateTime end)
+// {
+//     return Enumerable.Range(0, (end - start).Days + 1)
+//                      .Select(offset => start.AddDays(offset));
+// }
+// /// 实现多日导入数据
+// foreach (var date in GetDateRange(startDate, endDate))
+// {
+//     // Console.WriteLine(date.ToString("yyyy-MM-dd"));
+//     // dlt.SyncData(date.ToString("yyyy-MM-dd"));
+// }
+// // 富掌柜数据导入
+// dlt.ImportCsvToMySQL("/Users/zhangxuefeng/src/c1.csv",Dlt.getMysqlConnectStr());
 
 
 
