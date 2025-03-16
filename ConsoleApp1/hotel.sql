@@ -11,11 +11,22 @@
  Target Server Version : 90200
  File Encoding         : 65001
 
- Date: 15/03/2025 21:12:45
+ Date: 16/03/2025 19:50:44
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for crontab
+-- ----------------------------
+DROP TABLE IF EXISTS `crontab`;
+CREATE TABLE `crontab` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `kind` int DEFAULT NULL COMMENT '1代表给审计的',
+  `cronexpress` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- ----------------------------
 -- Table structure for fuzhanggui
@@ -59,7 +70,7 @@ CREATE TABLE `fuzhanggui` (
   `ordermemo` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL COMMENT '订单备注',
   `insert_dt` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1538 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=1746 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- ----------------------------
 -- Table structure for fzgfiles
@@ -71,7 +82,7 @@ CREATE TABLE `fzgfiles` (
   `filedata` longblob NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
 -- ----------------------------
 -- Table structure for guestcheck
@@ -154,3 +165,4 @@ CREATE TABLE `guestcheckdetailssumrow` (
 ) ENGINE=InnoDB AUTO_INCREMENT=6338 DEFAULT CHARSET=utf8mb3 ROW_FORMAT=DYNAMIC;
 
 SET FOREIGN_KEY_CHECKS = 1;
+INSERT INTO `hotel`.`crontab` (`id`, `kind`, `cronexpress`) VALUES (1, 1, '0 0 1 * * ? *');
