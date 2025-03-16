@@ -25,7 +25,7 @@ public class Tests
         
         var context = await browser.NewContextAsync(new BrowserNewContextOptions
         {
-            ViewportSize = ViewportSize.NoViewport,
+            ViewportSize = new ViewportSize(){Width = 1440, Height = 900},
             Permissions = new[] { "geolocation" },
             Locale = "zh-CN",
             ExtraHTTPHeaders = new Dictionary<string, string>
@@ -38,10 +38,12 @@ public class Tests
                 Latitude = 39.9024f,
                 Accuracy = 100,
             },
+            RecordVideoDir ="videos/",
+            RecordVideoSize = new RecordVideoSize()  { Width = 1440, Height = 900 },
         });
 
         var page = await context.NewPageAsync();
-        
+        var path = await page.Video.PathAsync();
         await page.GotoAsync(url);
         await page.ScreenshotAsync(new PageScreenshotOptions{Path = "EAAP.jpg"});
         await page
