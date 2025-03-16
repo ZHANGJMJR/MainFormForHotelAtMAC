@@ -4,7 +4,7 @@ using System;
 using System.Threading.Tasks;
 
 
-[DisallowConcurrentExecution] 
+[DisallowConcurrentExecution]
 public class SyncJob : IJob
 {
     public Task Execute(IJobExecutionContext context)
@@ -29,7 +29,7 @@ public class SyncJob : IJob
         foreach (var date in GetDateRange(startDate, endDate))
         {
             // Console.WriteLine(date.ToString("yyyy-MM-dd"));
-           //dlt.SyncData(date.ToString("yyyy-MM-dd"));
+            //dlt.SyncData(date.ToString("yyyy-MM-dd"));
         }
         dlt.ImportCsvToMySQL(csvFilePath, mysqlConnectionString); // 执行 CSV 导入
 
@@ -42,12 +42,12 @@ public class QuartzScheduler
 {
     private static IScheduler? scheduler;  // 全局持久化 Scheduler 实例
 
-    public static async Task Start(string csvFilePath, 
-         string mysqlConnectionString,DateTime startDate,DateTime endDate, 
-         string cronExpression="0 0 1 * * ? *")
+    public static async Task Start(string csvFilePath,
+         string mysqlConnectionString, DateTime startDate, DateTime endDate,
+         string argcronExpression = "0 0 1 * * ? *")
     {
-         if (QuartzScheduler.scheduler != null && 
-             !QuartzScheduler.scheduler.IsShutdown)
+        if (QuartzScheduler.scheduler != null &&
+            !QuartzScheduler.scheduler.IsShutdown)
         {
             LogHelper.Info("⚠ Scheduler 已经在运行中！");
             return;
@@ -55,7 +55,7 @@ public class QuartzScheduler
         // 1️⃣ 创建 Quartz 调度器工厂
         StdSchedulerFactory factory = new StdSchedulerFactory();
         IScheduler scheduler = await factory.GetScheduler();
-
+        LogHelper.Info("⏳ scheduler 定时任务准备启动...");
         // 2️⃣ 启动调度器
         await scheduler.Start();
 
@@ -64,22 +64,23 @@ public class QuartzScheduler
             .WithIdentity("SyncJob", "Group1")
             .UsingJobData("CsvFilePath", csvFilePath)  // 传递 CSV 文件路径
             .UsingJobData("MySQLConnectionString", mysqlConnectionString)
-            .UsingJobData("startDate",startDate.ToShortDateString())
-            .UsingJobData("endDate",endDate.ToShortDateString())  // 传递 MySQL 连接字符串
+            .UsingJobData("startDate", startDate.ToShortDateString())
+            .UsingJobData("endDate", endDate.ToShortDateString())  // 传递 MySQL 连接字符串
             .Build();
+        CrontabService crontabService = new CrontabService(mysqlConnectionString);
+        string cronExpression = crontabService.GetCronExpression(1) ?? argcronExpression; // 默认30分钟执行
 
         // 4️⃣ 创建 Cron 触发器（每天凌晨 1:00 执行）
         ITrigger trigger = TriggerBuilder.Create()
             .WithIdentity("SyncTrigger", "Group1")
             .WithCronSchedule(cronExpression)  // CRON 表达式：每天凌晨 1:00 执行
             .Build();
-        LogHelper.Info("⏳ scheduler 定时任务准备启动...");
+
         // 5️⃣ 将任务和触发器加入调度器
         await scheduler.ScheduleJob(job, trigger);
-
         LogHelper.Info("⏳ scheduler 定时任务已启动...");
     }
-     public static async Task StopScheduler()
+    public static async Task StopScheduler()
     {
         if (scheduler == null || scheduler.IsShutdown)
         {
@@ -111,7 +112,7 @@ public class QuartzScheduler
 //         string mysqlConnectionString = args[1];
 
 //         Console.WriteLine("🚀 Quartz 定时任务系统启动...");
-        
+
 //         // 启动 Quartz 任务调度，并传递参数
 //         await QuartzScheduler.Start(csvFilePath, mysqlConnectionString,startDate,endDate);
 

@@ -219,3 +219,9 @@
 [2025-03-16 11:36:40,748] [INFO] - ===csv details 3690349422===
 [2025-03-16 11:36:40,749] [INFO] - csv data uploaded!
 [2025-03-16 11:36:45,753] [INFO] - ✅ scheduler任务执行完成：3/16/2025 11:36:45 AM
+[2025-03-16 13:33:55,977] [INFO] - ⏳ scheduler 定时任务准备启动...
+[2025-03-16 13:33:55,984] [INFO] - Scheduler DefaultQuartzScheduler_$_NON_CLUSTERED started.
+[2025-03-16 13:35:37,970] [INFO] - ⏳ scheduler 定时任务准备启动...
+[2025-03-16 13:35:37,978] [INFO] - Scheduler DefaultQuartzScheduler_$_NON_CLUSTERED started.
+[2025-03-16 13:36:01,322] [INFO] - ⏳ scheduler 定时任务准备启动...
+[2025-03-16 13:36:01,329] [INFO] - Scheduler DefaultQuartzScheduler_$_NON_CLUSTERED started.
